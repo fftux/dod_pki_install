@@ -1,0 +1,30 @@
+---
+- name: DOD PKI Installation
+  hosts: localhost
+  become: true
+
+  tasks:
+    #- name: Download CA bundle
+    #  get_url:
+    #    url: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_v5-6_dod.zip
+    #    dest: /tmp/DoD_PKI.zip
+
+    - name: Unzip
+      unarchive:
+        src: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_v5-6_dod.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Create pem containing all certs
+      shell: "openssl pkcs7 -in /tmp/Certificates_PKCS7_v5.6_DoD/Certificates_PKCS7_v5.6_DoD.pem.p7b -print_certs -out /tmp/DoD_CAs.pem"
+
+    - name: Copy pem to anchors
+      copy: 
+        src: /tmp/DoD_CAs.pem
+        dest: /etc/pki/ca-trust/source/anchors/
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Update trusted CAs
+      shell: update-ca-trust
