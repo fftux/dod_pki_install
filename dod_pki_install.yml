@@ -22,7 +22,7 @@
       become: true
 
     - name: Create pem containing all certs
-      shell: "openssl pkcs7 -in /tmp/Certificates_PKCS7_v5.6_DoD/Certificates_PKCS7_v5.6_DoD.pem.p7b -print_certs -out /tmp/DoD_CAs.pem"
+      shell: "openssl pkcs7 -in /tmp/Certificates_PKCS7_*_DoD/Certificates_PKCS7_*_DoD.pem.p7b -print_certs -out /tmp/DoD_CAs.pem"
 
     - name: Copy pem to anchors
       copy: 
