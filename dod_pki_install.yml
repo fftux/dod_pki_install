@@ -9,11 +9,17 @@
     #    url: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_v5-6_dod.zip
     #    dest: /tmp/DoD_PKI.zip
 
-    - name: Unzip
+    - name: Download and unzip
       unarchive:
-        src: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_v5-6_dod.zip
+        src: https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip
         dest: /tmp
         remote_src: yes
+
+    - name: Ensure openssl is installed
+      yum:
+        name: openssl
+        state: installed
+      become: true
 
     - name: Create pem containing all certs
       shell: "openssl pkcs7 -in /tmp/Certificates_PKCS7_v5.6_DoD/Certificates_PKCS7_v5.6_DoD.pem.p7b -print_certs -out /tmp/DoD_CAs.pem"
